@@ -1,17 +1,30 @@
 //on click function to start. once user enters city name. that search starts the function and goes thru the api
 var API_key = "key"
-start.addEventListener("submit", seachCity);
+start.addEventListener("submit", searchCity);
 
 function searchCity(event){
     event.preventDefault();
     var cityName = document.getElementById("city-name").value;
 
-    getCoordinates(cityName);
-}
+    getCoordinates(cityName);}
+ 
+    function getCoordinates(cityName){
+        var requestURL = 'http://api.openweathermap.org/geo/1.0/direct?q={city name},{state code},{country code}&limit={limit}&appid={3acfc9fd412f80b4906c54517b3712a3}';
+        fetch(requestURL)
+            .then(function(response){
+                return response.json();})
+            .then(function(data){
+            getForecast(data.lat, data.lon);})
+
+
+//updated order of functions here. first get the Coordinates, then plug those in to getforecast. API is still not working, so will need to go back and test
+
+
+
 function getForecast(lat,lon){
     var requestURL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${3acfc9fd412f80b4906c54517b3712a3}`;
     fetch(requestURL)
-        .then(function (response) {
+        .then(function (response){
             return response.json();
         })
         .then(function (data){
