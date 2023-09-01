@@ -7,14 +7,12 @@ function searchCity(event) {
   event.preventDefault();
   var cityName = document.getElementById("city-name").value;
 
- var coordinates = getCoordinates(cityName)
- var forecast = getForecast(lat.lon)
-
-
- //trying to do this as variables but right now the thought process is to
- //run the 2 fuctions below into it. user clicks search city. then we run getcoords
- //from there get coords runs into get forecast?
-    }
+  getCoordinates(cityName)
+    .then(function (coordinates) {
+      return getForecast(coordinates.lat, coordinates,lon);})
+    .then(function(forecast){
+      console.log(forecast)
+    });}
 
 function getCoordinates(cityName) {
   var requestURL = `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&appid=3acfc9fd412f80b4906c54517b3712a3`;
@@ -23,18 +21,22 @@ function getCoordinates(cityName) {
       return response.json();
     })
     .then(function(data){
+        //console log confirms that lat and lon are coming up when city is entered
+        //switched console log below to declare var for function above, but I believe they would not get read from here?
+        var coordinates = { lat: data[0].lat, lon: data[0].lon };
         return {lat: data[0].lat, lon: data[0].lon};
     });}
 
 //updated order of functions here. first get the Coordinates, then plug those in to getforecast. API is still not working, so will need to go back and test
 
 function getForecast(lat,lon){
-    var requestURL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=$3acfc9fd412f80b4906c54517b3712a3`;
+    var requestURL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=3acfc9fd412f80b4906c54517b3712a3`;
     fetch(requestURL)
         .then(function (response){
             return response.json();
         })
         .then(function (data){
+          var temp = data.list[0].main.temp;
            return {temp: data[0].temp};
         })
     }
@@ -76,4 +78,4 @@ function getForecast(lat,lon){
 
 // }
 
-//     loadLocalStorage()
+//     loadLocalStorage
