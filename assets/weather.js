@@ -1,5 +1,5 @@
 //on click function to start. once user enters city name. that search starts the function and goes thru the api
-var API_key = "key";
+var API_key = "3acfc9fd412f80b4906c54517b3712a3";
 var start = document.getElementById("search-city");
 start.addEventListener("submit", searchCity);
 
@@ -9,14 +9,14 @@ function searchCity(event) {
 
   getCoordinates(cityName)
     .then(function (coordinates) {
-      return getForecast(coordinates.lat, coordinates,lon);})
+      return getForecast(coordinates.lat, coordinates.lon);})
     .then(function(forecast){
       console.log(forecast)
     });}
 
 function getCoordinates(cityName) {
   var requestURL = `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&appid=3acfc9fd412f80b4906c54517b3712a3`;
-  fetch(requestURL)
+  return fetch(requestURL)
     .then(function (response) {
       return response.json();
     })
@@ -31,15 +31,17 @@ function getCoordinates(cityName) {
 
 function getForecast(lat,lon){
     var requestURL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=3acfc9fd412f80b4906c54517b3712a3`;
-    fetch(requestURL)
+    return fetch(requestURL)
         .then(function (response){
             return response.json();
         })
         .then(function (data){
           var temp = data.list[0].main.temp;
-           return {temp: data[0].temp};
+           return {temp: data.list[0].main.temp};
         })
     }
+
+    //function now works and pulls up temperature. need to adjust api link so that it displays in F
 
 //         //if no coordinates come back
 //         return out of this function and aler the user (Enter valid city)
