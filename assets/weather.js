@@ -11,7 +11,7 @@ function searchCity(event) {
     .then(function (coordinates) {
       return getForecast(coordinates.lat, coordinates.lon);})
     .then(function(forecast){
-      console.log(forecast)
+      displayWeather(cityName, forecast);
     });}
 
 function getCoordinates(cityName) {
@@ -40,6 +40,14 @@ function getForecast(lat,lon){
            return {temp: data.list[0].main.temp};
         })
     }
+
+function displayWeather(cityName, forecast){
+  var weatherContainer = document.getElementById("weather");
+  weatherContainer.innerHTML = '';
+  var header = document.createElement("h2");
+  header.textContent = "Weather for " + cityName;
+    weatherContainer.appendChild(header);
+}
 
     //function now works and pulls up temperature. need to adjust api link so that it displays in F
 
