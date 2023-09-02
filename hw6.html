@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="assets/hw4.css"/>
+    <link rel="stylesheet" href="assets/weather.css">
 </head>
 <body>
     <form id="search-city" >
@@ -12,6 +12,14 @@
         <input type="text" id="city-name" name="city" required>
         <button type="submit">Search</button>
     </form>
+    <div id="search-history">
+        <!-- list of searches for local storage goes here -->
+    </div>
+
+    <div id="weather">
+        <!-- info from weather API goes here -->
+    </div>
+    
 </body>
 <script src="assets/weather.js"></script>
 
