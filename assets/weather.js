@@ -1,5 +1,5 @@
 //on click function to start. once user enters city name. that search starts the function and goes thru the api
-var API_key = "key";
+var API_key = "3acfc9fd412f80b4906c54517b3712a3";
 var start = document.getElementById("search-city");
 start.addEventListener("submit", searchCity);
 
@@ -7,37 +7,41 @@ function searchCity(event) {
   event.preventDefault();
   var cityName = document.getElementById("city-name").value;
 
- var coordinates = getCoordinates(cityName)
- var forecast = getForecast(lat.lon)
-
-
- //trying to do this as variables but right now the thought process is to
- //run the 2 fuctions below into it. user clicks search city. then we run getcoords
- //from there get coords runs into get forecast?
-    }
+  getCoordinates(cityName)
+    .then(function (coordinates) {
+      return getForecast(coordinates.lat, coordinates.lon);})
+    .then(function(forecast){
+      console.log(forecast)
+    });}
 
 function getCoordinates(cityName) {
   var requestURL = `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&appid=3acfc9fd412f80b4906c54517b3712a3`;
-  fetch(requestURL)
+  return fetch(requestURL)
     .then(function (response) {
       return response.json();
     })
     .then(function(data){
+        //console log confirms that lat and lon are coming up when city is entered
+        //switched console log below to declare var for function above, but I believe they would not get read from here?
+        var coordinates = { lat: data[0].lat, lon: data[0].lon };
         return {lat: data[0].lat, lon: data[0].lon};
     });}
 
 //updated order of functions here. first get the Coordinates, then plug those in to getforecast. API is still not working, so will need to go back and test
 
 function getForecast(lat,lon){
-    var requestURL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=$3acfc9fd412f80b4906c54517b3712a3`;
-    fetch(requestURL)
+    var requestURL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=3acfc9fd412f80b4906c54517b3712a3`;
+    return fetch(requestURL)
         .then(function (response){
             return response.json();
         })
         .then(function (data){
-           return {temp: data[0].temp};
+          var temp = data.list[0].main.temp;
+           return {temp: data.list[0].main.temp};
         })
     }
+
+    //function now works and pulls up temperature. need to adjust api link so that it displays in F
 
 //         //if no coordinates come back
 //         return out of this function and aler the user (Enter valid city)
@@ -76,4 +80,4 @@ function getForecast(lat,lon){
 
 // }
 
-//     loadLocalStorage()
+//     loadLocalStorage
