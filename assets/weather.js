@@ -1,11 +1,16 @@
 //on click function to start. once user enters city name. that search starts the function and goes thru the api
-var API_key = "3acfc9fd412f80b4906c54517b3712a3";
+
+//function was not working till domcontentloaded was added. by doing this html now loads first and allows function to run properly
+document.addEventListener("DOMContentLoaded", function() {
 var start = document.getElementById("search-city");
-start.addEventListener("submit", searchCity);
+displaySearchHistory();
+start.addEventListener("submit", searchCity);});
 
 function searchCity(event) {
   event.preventDefault();
   var cityName = document.getElementById("city-name").value;
+
+  addToSearchHistory(cityName);
 
   getCoordinates(cityName)
     .then(function (coordinates) {
@@ -50,8 +55,43 @@ function displayWeather(cityName, forecast){
     weatherContainer.appendChild(header);
     var tempDisplay = document.createElement("h3");
     tempDisplay.textContent = "Current temperature: " + forecast.temp
-    weatherContainer.appendChild(tempDisplay);
-}
+    weatherContainer.appendChild(tempDisplay);}
+
+
+
+   //send users search to local storage 
+    var citySearches = JSON.parse(localStorage.getItem("citySearches")) || [];
+    function addToSearchHistory(cityName) {
+      citySearches.push(cityName);
+      localStorage.setItem("citySearches", JSON.stringify(citySearches));
+    }
+
+    //display the searches in the side bar under search history
+    //THIS IS NOT WORKING AND WHERE I AM STUCK. SEARCH CITIES WONT DISPLAY (this works now after adding domcontent loaded above)
+    function displaySearchHistory() {
+      var searchHistoryDiv = document.getElementById("search-history");
+      searchHistoryDiv.innerHTML = "";
+
+
+      //this function should look thru all searches and adds element/makes it clickable
+      citySearches.forEach(function (city) {
+        var cityButton = document.createElement("a");
+        cityButton.href = "#";
+        cityButton.textContent = city;
+        
+
+        //function which takes the clicked on city from local storage and runs it thru forecast function
+        cityButton.addEventListener("click", function () {
+          getCoordinates(city).then(function (coordinates) {
+            return getForecast(coordinates.lat, coordinates.lon);
+          }).then(function (forecast) {
+            displayWeather(city, forecast);
+          });
+
+      });
+        searchHistoryDiv.appendChild(cityButton);
+      });
+    }
 
     //function now works and pulls up temperature. need to adjust api link so that it displays in F
 
