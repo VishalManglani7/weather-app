@@ -41,12 +41,16 @@ function getForecast(lat,lon){
         })
     }
 
+    //dom manipulation now works and both searched city and forecast display
 function displayWeather(cityName, forecast){
   var weatherContainer = document.getElementById("weather");
   weatherContainer.innerHTML = '';
   var header = document.createElement("h2");
   header.textContent = "Weather for " + cityName;
     weatherContainer.appendChild(header);
+    var tempDisplay = document.createElement("h3");
+    tempDisplay.textContent = "Current temperature: " + forecast.temp
+    weatherContainer.appendChild(tempDisplay);
 }
 
     //function now works and pulls up temperature. need to adjust api link so that it displays in F
