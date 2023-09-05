@@ -13,11 +13,7 @@ function searchCity(event) {
   addToSearchHistory(cityName);
 
   getCoordinates(cityName)
-    .then(function (coordinates) {
-      return getForecast(coordinates.lat, coordinates.lon);})
-    .then(function(forecast){
-      displayWeather(cityName, forecast);
-    });}
+}
 
 function getCoordinates(cityName) {
   var requestURL = `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&appid=3acfc9fd412f80b4906c54517b3712a3`;
@@ -28,8 +24,7 @@ function getCoordinates(cityName) {
     .then(function(data){
         //console log confirms that lat and lon are coming up when city is entered
         //switched console log below to declare var for function above, but I believe they would not get read from here?
-        var coordinates = { lat: data[0].lat, lon: data[0].lon };
-        return {lat: data[0].lat, lon: data[0].lon};
+        getForecast(data[0].lat, data[0].lon)
     });}
 
 //updated order of functions here. first get the Coordinates, then plug those in to getforecast. API is still not working, so will need to go back and test
@@ -41,40 +36,67 @@ function getForecast(lat,lon){
             return response.json();
         })
         .then(function (data){
-          var temp = data.list[0].main.temp;
-           return {temp: data.list[0].main.temp};
+          displayForecast(data)
         })
     }
 
     //dom manipulation now works and both searched city and forecast display
-function displayWeather(cityName, forecast){
-  var weatherContainer = document.getElementById("weather");
-  weatherContainer.innerHTML = '';
-  var header = document.createElement("h2");
-  header.textContent = "Weather for " + cityName;
-    weatherContainer.appendChild(header);
-    var tempDisplay = document.createElement("h3");
-    tempDisplay.textContent = "Current temperature: " + forecast.temp
-    weatherContainer.appendChild(tempDisplay);}
+function displayForecast(data){
+  console.log(data)
+  var weatherContainer = document.getElementById("forecast");
+  weatherContainer.innerHTML=""
+var forecastData = data.list
+var startIndex = 0
+//iterate through forecastData to find when the date is not today, and set startIndex = the index we found is the following day
+//we want o make sure we're not in today
+
+for (let i = startIndex; i < forecastData.length; i+=8) {
+  
+  weatherContainer.innerHTML += `<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">${formatDate(forecastData[i].dt_txt)}</h5>
+    <h6 class="card-subtitle mb-2 text-muted">Temp</h6>
+    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    <a href="#" class="card-link">Card link</a>
+    <a href="#" class="card-link">Another link</a>
+  </div>
+</div>`
+}
+}
+
+function formatDate(date){
+var formattedDate =  date.split(' ')
+console.log(formattedDate)
+return formattedDate[0]
+}
 
 
 
    //send users search to local storage 
-    var citySearches = JSON.parse(localStorage.getItem("citySearches")) || [];
-    function addToSearchHistory(cityName) {
+   function addToSearchHistory(cityName) {
+      var citySearches = JSON.parse(localStorage.getItem("citySearches")) || [];
+      if(citySearches.includes(cityName)){
+        return
+      }
       citySearches.push(cityName);
+      if(citySearches.length > 5){
+        citySearches.shift()
+      }
       localStorage.setItem("citySearches", JSON.stringify(citySearches));
+      displaySearchHistory()
     }
 
     //display the searches in the side bar under search history
     //THIS IS NOT WORKING AND WHERE I AM STUCK. SEARCH CITIES WONT DISPLAY (this works now after adding domcontent loaded above)
     function displaySearchHistory() {
+      var citySearches = JSON.parse(localStorage.getItem("citySearches")) || [];
       var searchHistoryDiv = document.getElementById("search-history");
-      searchHistoryDiv.innerHTML = "";
+      searchHistoryDiv.innerHTML = "<h3>Search History</h3>";
 
 
       //this function should look thru all searches and adds element/makes it clickable
       citySearches.forEach(function (city) {
+        var cityDiv = document.createElement("div");
         var cityButton = document.createElement("a");
         cityButton.href = "#";
         cityButton.textContent = city;
@@ -82,14 +104,10 @@ function displayWeather(cityName, forecast){
 
         //function which takes the clicked on city from local storage and runs it thru forecast function
         cityButton.addEventListener("click", function () {
-          getCoordinates(city).then(function (coordinates) {
-            return getForecast(coordinates.lat, coordinates.lon);
-          }).then(function (forecast) {
-            displayWeather(city, forecast);
-          });
-
+          getCoordinates(city)
       });
-        searchHistoryDiv.appendChild(cityButton);
+        cityDiv.appendChild(cityButton);
+        searchHistoryDiv.appendChild(cityDiv); 
       });
     }
 
