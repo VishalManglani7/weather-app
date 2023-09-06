@@ -16,7 +16,7 @@ function searchCity(event) {
 }
 
 function getCoordinates(cityName) {
-  var requestURL = `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&appid=3acfc9fd412f80b4906c54517b3712a3`;
+  var requestURL = `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}+&appid=3acfc9fd412f80b4906c54517b3712a3`;
   return fetch(requestURL)
     .then(function (response) {
       return response.json();
@@ -30,7 +30,7 @@ function getCoordinates(cityName) {
 //updated order of functions here. first get the Coordinates, then plug those in to getforecast. API is still not working, so will need to go back and test
 
 function getForecast(lat,lon){
-    var requestURL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=3acfc9fd412f80b4906c54517b3712a3`;
+    var requestURL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=imperial&appid=3acfc9fd412f80b4906c54517b3712a3`;
     return fetch(requestURL)
         .then(function (response){
             return response.json();
@@ -55,10 +55,9 @@ for (let i = startIndex; i < forecastData.length; i+=8) {
   weatherContainer.innerHTML += `<div class="card">
   <div class="card-body">
     <h5 class="card-title">${formatDate(forecastData[i].dt_txt)}</h5>
-    <h6 class="card-subtitle mb-2 text-muted">Temp</h6>
-    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-    <a href="#" class="card-link">Card link</a>
-    <a href="#" class="card-link">Another link</a>
+    <h6 class="card-subtitle mb-2 text-muted">Temp: ${forecastData[i].main.temp}° F</h6>
+    <h6 class="card-subtitle mb-2 text-muted">Wind Speed: ${forecastData[i].wind.speed} mph</h6>
+    <h6 class="card-subtitle mb-2 text-muted">Humdity: ${forecastData[i].main.humidity}%</h6>
   </div>
 </div>`
 }

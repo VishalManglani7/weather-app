@@ -1,12 +1,9 @@
 h1, h3{
     text-align: center;
 }
-.red-bg {
-    background-color: red;
-}
 
 #search-city{
-    background-color: blue;
+    background-color: lightblue;
     display:flex;
     justify-content: center;
 }
@@ -29,14 +26,14 @@ main{
 }
 
 #forecast{
-    background-color: red;
+    background-color: lightblue;
     width: 100%;
     display:flex;
     justify-content: space-evenly;
 }
 
 .card{
-    background-color: purple;
+    background-color: lightcoral;
 }
 
 @media screen and (max-width: 600px){
