@@ -44,11 +44,20 @@ function getForecast(lat,lon){
 function displayForecast(data){
   console.log(data)
   var weatherContainer = document.getElementById("forecast");
+  var currentWeather = document.getElementById("weather");
+  var forecastData = data.list
   weatherContainer.innerHTML=""
-var forecastData = data.list
 var startIndex = 0
 //iterate through forecastData to find when the date is not today, and set startIndex = the index we found is the following day
 //we want o make sure we're not in today
+
+//below is the updated html for the current weather. followed by the loop which runs to grab the weather for the following 5 days. done in increments of 8
+//as the API displays every 3 hours
+currentWeather.innerHTML= `
+<h2>Current Weather in ${data.city.name}</h2>
+<p>Temp: ${data.list[0].main.temp}° F</p>
+<p>Winds: ${data.list[0].wind.speed} mph</p>
+<p>Humidity: ${data.list[0].main.humidity}%</p>`;
 
 for (let i = startIndex; i < forecastData.length; i+=8) {
   
