@@ -16,7 +16,7 @@ function searchCity(event) {
 }
 
 function getCoordinates(cityName) {
-  var requestURL = `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}+&appid=3acfc9fd412f80b4906c54517b3712a3`;
+  var requestURL = `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}+&appid=3acfc9fd412f80b4906c54517b3712a3`;
   return fetch(requestURL)
     .then(function (response) {
       return response.json();
